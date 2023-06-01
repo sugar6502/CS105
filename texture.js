@@ -26,7 +26,7 @@ function init() {
 
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 1000 );
-    camera.position.set(0,3,24);
+    camera.position.set(100,100,150);
 
 
     const controls = new OrbitControls( camera, renderer.domElement );
@@ -71,45 +71,50 @@ function init() {
      
         //-> demo emissive mới dùng
         // emissive: "white",
-        // emissiveIntensity: 0.1, 
-     
-        
-
-    
+        // emissiveIntensity: 0.1,
     }); 
-
-
 
     const sphere = new THREE.Mesh( geometry, material ); 
     sphere.scale.set(5,5,5);
     sphere.castShadow = true;
-
+    sphere.name = 'planet';
 
     scene.add( sphere );
 
-    
-    const light = new THREE.DirectionalLight( 0xffffff, 10 );
-    light.position.z = 0.5;
-    light.position.y = 0;// 1
-    
-    //const light = new THREE.AmbientLight(0xffffff);
+    const sun_geometry = new THREE.SphereGeometry( 5, 64, 32 ); 
 
+    const sun_texture = new THREE.TextureLoader().load('./textures/sun.jpg' ); 
+    const sun_material = new THREE.MeshBasicMaterial({
+        transparent: true,
+        roughness: 0.07,
+        side: THREE.DoubleSide,
+        shininess: 60,
+        map: sun_texture
+    }); 
 
-    scene.add( light );
+    const sun = new THREE.Mesh( sun_geometry, sun_material ); 
+    sun.scale.set(7,7,7);
+    sun.castShadow = true;
 
 
 
     GUI
     const params = {
-        map: null,
-        map_bump: null,
-        displacementMap: null,
-        specularmap: null,
-        alphamap:null,
-        emissivemap:null,
+        Texture: {
+            map: null,
+            map_bump: null,
+            displacementMap: null,
+            specularmap: null,
+            alphamap:null,
+            emissivemap:null
+        },
 
+        PointLight: {
+            visible: false,
+            color: 0xffffff,
+            intensity: 1
+        }
        
-    
     };
     
 
@@ -121,58 +126,87 @@ function init() {
     });
  
     
-   
+    {
+        const PointLight = gui.addFolder('Point Light - Sun');
+        var light_po = new THREE.PointLight({color: 0xffffff, intensity: 1});
+        light_po.position.set( 75, 55, -100 );
+        light_po.castShadow = true;
+        
+
+        PointLight.add(params.PointLight,"visible").onChange(value => {
+        if(value == true) {
+            PointLight.open();
+            scene.add(light_po);
+            light_po.add(sun);
+        }
+        else { 
+            PointLight.close();
+            scene.remove(light_po);
+        }
+        });
     
-    gui.add( params, 'map', textures ).onChange( function ( val ) {
+        PointLight.addColor(params.PointLight,'color').onChange(value => {
+            light_po.color.set(value);
+        });
+    
+        PointLight.add(params.PointLight,'intensity',0,100).onChange(value => {
+            light_po.intensity = value;
+      
+        });
+        PointLight.add(light_po.position, 'x', -100, 100);
+        PointLight.add(light_po.position, 'y', -100, 100);
+        PointLight.add(light_po.position, 'z', -100, 100);
+    }
+    {
+        const Texture = gui.addFolder('Texture - Planet');
+        Texture.add( params, 'map', textures ).onChange( function ( val ) {
 
-        material.map = val;
-        material.needsUpdate = true;
+            material.map = val;
+            material.needsUpdate = true;
 
-    } );
+        } );
 
-    gui.add( params, 'map_bump', textures ).onChange( function ( val ) {
+        Texture.add( params, 'map_bump', textures ).onChange( function ( val ) {
 
-        material.bumpMap = val;
-        material.needsUpdate = true;
+            material.bumpMap = val;
+            material.needsUpdate = true;
+            
+
+        } );
+    
+        Texture.add( params, 'displacementMap',textures).onChange( function ( val ) {
+
         
+            material.displacementMap = val;
+            material.needsUpdate = true;
+            
 
-    } );
-   
-    gui.add( params, 'displacementMap',textures).onChange( function ( val ) {
+        } );
+        Texture.add( params, 'specularmap',textures).onChange( function ( val ) {
 
-       
-        material.displacementMap = val;
-        material.needsUpdate = true;
-        
+            
+            material.specularMap = val;
 
-    } );
-    gui.add( params, 'specularmap',textures).onChange( function ( val ) {
+            material.needsUpdate = true;
+            
 
-         
-        material.specularMap = val;
+        } );
+        Texture.add( params, 'alphamap',textures).onChange( function ( val ) {
+    
+            
+            material.alphaMap = val;
+            material.needsUpdate = true;
+            
 
-        material.needsUpdate = true;
+        } );
+        Texture.add( params, 'emissivemap',textures).onChange( function ( val ) {
+            
+            material.emissiveMap = val;
+            
+            material.needsUpdate = true;
         
-
-    } );
-    gui.add( params, 'alphamap',textures).onChange( function ( val ) {
-   
-         
-        material.alphaMap = val;
-        material.needsUpdate = true;
-        
-
-    } );
-    gui.add( params, 'emissivemap',textures).onChange( function ( val ) {
-        
-        
-        
-        material.emissiveMap = val;
-        
-        material.needsUpdate = true;
-        
-
-    } );
+        } );
+    }
 
     
     
@@ -185,11 +219,9 @@ function init() {
 
 function animate() {
     requestAnimationFrame(animate)
-    // updateFcts.push(function(delta, now) {
-    //     sphere.rotation.y += 1 / 16 * delta;
-    //   })
-    // controls.update()
-    // mainLight.update();
+
+    var sphere = scene.getObjectByName('planet');
+    sphere.rotation.x += 0.01;
     render();
 
     //stats.update()

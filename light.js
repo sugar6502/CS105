@@ -168,7 +168,6 @@ const params = {
         decay: 2,
         distance: 0.0,
         power: 1.0
-
     },
 
 
