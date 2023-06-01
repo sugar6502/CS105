@@ -8,7 +8,7 @@ import {RectAreaLightHelper} from 'RectAreaLightHelper'
 
 
 let renderer, scene, camera;
-let Light, lightHelper;
+let Light, lightHelper,light_re
 
 
 
@@ -318,6 +318,7 @@ const params = {
     lightHelper = helper_po;
     PointLight.add(params.PointLight,"visible").onChange(value => {
     if(value == true) {
+        Light = light_po;
         PointLight.open();
         scene.add(light_po);
         scene.add( helper_po );
@@ -371,6 +372,7 @@ const params = {
     SpotLight.add(params.SpotLight,"visible").onChange(value => {
     if(value == true) {
         SpotLight.open();
+        Light = light_sp;
         scene.add(light_sp);
         scene.add( helper_sp );
 
@@ -434,17 +436,19 @@ const params = {
    
     
 
-    var light_re = new THREE.RectAreaLight(0xffffff, 5, 4, 10 );
+    light_re = new THREE.RectAreaLight(0xffffff, 5, 4, 10 );
     light_re.lookAt(0, 0, 0);
     light_re.position.set( 10, 0, 20 );
     
     var helper = new RectAreaLightHelper(light_re); 
+   
+   
     
     RectAreaLight.add(params.RectAreaLight,"visible").onChange(value => {
     if(value == true) {
         RectAreaLight.open();
     
-        //Light = light_po;
+        Light = light_po;
         scene.add(light_re);
         scene.add( helper );
          
@@ -494,6 +498,7 @@ function render() {
 
     Light.position.x = Math.cos( time ) * 25;
     Light.position.z = Math.sin( time ) * 25;
+    light_re.rotation.x += 0.005
 
     lightHelper.update();
 
