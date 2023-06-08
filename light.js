@@ -9,6 +9,33 @@ import {RectAreaLightHelper} from 'RectAreaLightHelper'
 
 let renderer, scene, camera;
 let Light, lightHelper,light_re
+const model = new GLTFLoader();
+model.load(
+    './model/polybios.glb',
+    function(gltf) {
+        //gltf.scene.rotation.set(0,90,0);
+        gltf.scene.scale.set(2,2,2);
+        gltf.scene.position.set(0,0,10);
+        gltf.scene.rotation.y +=90;
+        
+
+        gltf.scene.traverse(function (child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+             
+             
+            }
+        })
+        scene.add(gltf.scene)
+    },
+    (xhr) => {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+    },
+    (error) => {
+        console.log(error)
+    }
+)
 
 
 
@@ -100,33 +127,7 @@ function init() {
     //----------------------------------------
     //---------Model
 
-const model = new GLTFLoader();
-model.load(
-    './model/polybios.glb',
-    function(gltf) {
-        //gltf.scene.rotation.set(0,90,0);
-        gltf.scene.scale.set(2,2,2);
-        gltf.scene.position.set(0,0,10);
-        gltf.scene.rotation.y +=90;
-        
 
-        gltf.scene.traverse(function (child) {
-            if (child.isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-             
-             
-            }
-        })
-        scene.add(gltf.scene)
-    },
-    (xhr) => {
-        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-    },
-    (error) => {
-        console.log(error)
-    }
-)
 
 
 
