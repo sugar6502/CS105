@@ -200,11 +200,19 @@ function init() {
 
         } );
         Texture.add( params, 'emissivemap',textures).onChange( function ( val ) {
-            
+            if(val == null) {
+                material.emissive = null;
+                material.emissiveIntensity = null;
+            }
+            else {
+    
+                sphere.material.emissive = new THREE.Color( 0xffffff );
+                sphere.material.emissiveIntensity = 0.1;
+            }
+
             material.emissiveMap = val;
-            
             material.needsUpdate = true;
-        
+            
         } );
     }
 
@@ -220,8 +228,8 @@ function init() {
 function animate() {
     requestAnimationFrame(animate)
 
-    var sphere = scene.getObjectByName('planet');
-    sphere.rotation.x += 0.01;
+   // var sphere = scene.getObjectByName('planet');
+    //sphere.rotation.x += 0.01;
     render();
 
     //stats.update()

@@ -69,7 +69,7 @@ Trong thế giới thực, ánh sáng đóng vai trò rất quan trọng trong v
 ### **2. Phân loại ánh sáng**
 ### **AmbientLight**
 
-Đây là kiểu ánh sáng cơ bản nhất trong đồ họa. Với kiểu chiếu sáng này, màu sắc sẽ được áp dụng cho toàn bố cục kể cả hình dạng vật thể. Với kiểu sáng này, tia sáng sẽ không có hướng và cường độ ánh sáng sẽ như nhau không tính khoảng cách xa gần của vật thể.
+Đây là kiểu ánh sáng cơ bản nhất trong đồ họa. Với kiểu chiếu sáng này, màu sắc sẽ được áp dụng cho toàn bố cục kể cả hình dạng vật thể. Tia sáng sẽ không có hướng và cường độ ánh sáng sẽ như nhau không tính khoảng cách xa gần của vật thể.
 
 ![Poly_Ambient](./imgs/poly_ambient.png)
 

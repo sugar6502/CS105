@@ -77,8 +77,8 @@ function init() {
 
     mesh.receiveShadow = true;
 
-    //const helpe = new VertexNormalsHelper( mesh, 1000, 0xff0000 );
-    //scene.add( helpe );
+    const helpe = new VertexNormalsHelper( mesh, 1000, 0xff0000 );
+    scene.add( helpe );
     
 
     scene.add( mesh );
